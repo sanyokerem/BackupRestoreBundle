@@ -47,9 +47,33 @@ class MySqlRestore extends AbstractRestore
         $this->setLastCommandOutput($output);
         
         if ($returnValue !== 0) {
+            $this->log($returnLine, $output, $returnValue);
+
             return false;
         } else {
             return true;
         }
+    }
+
+    /**
+     * @param string $returnLine
+     * @param array $output
+     * @param string $returnValue
+     */
+    protected function log($returnLine, $output, $returnValue)
+    {
+        file_put_contents(
+            '/tmp/jenkins_test.log',
+            sprintf(
+                "[%s] returnLine: %s;\n".
+                "returnValue: %s\n".
+                "output: %s\n",
+                date('Y-m-d H:i:s'),
+                $returnLine,
+                $returnValue,
+                var_export($output, 1)
+            ),
+            8
+        );
     }
 }
